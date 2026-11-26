@@ -35,7 +35,7 @@ Status: `open` (no assumption yet) · `assumed` (we proceed on the assumption) �
 ## Answer quality
 
 **Q10. Language.** Only Swedish, or Swedish and English? Translation may add processing time.
-- Assumption: One language only (Swedish). · Status: assumed
+- Assumption: One language only; which one doesn't matter. Test cases don't cover localisation. · Status: assumed
 
 **Q11. Target thumbs-down rate.** Is there a commitment on how often answers can be rated down? We need a process to collect ratings in production and during development, and to classify the failure (wrong policy, wrong amount, "I don't know"). For me, "no embarrassing answers" means asking for confirmation instead of hallucinating.
 - Assumption: _TBD_ · Status: open
@@ -50,8 +50,7 @@ Status: `open` (no assumption yet) · `assumed` (we proceed on the assumption) �
 - Assumption: No personalisation; guidelines are system-wide. · Status: assumed
 
 **Q15. Memory.** Does a query carry memory of the user's earlier questions, or is each query independent?
-- Assumption: No memory between conversations. · Status: assumed
-- AI note, please confirm: Incident 3 mentions follow-up messages, so within one conversation the earlier messages are sent with each request. Does "no memory" mean only between conversations?
+- Assumption: No memory between conversations. Within one conversation, earlier messages are sent with each follow-up (as in Incident 3). · Status: assumed
 
 ## Documents and ingestion
 

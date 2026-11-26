@@ -8,6 +8,7 @@
 | 4 | ~09:55 | Clarified: the harness illustrates *how* we would test, not a pass/fail gate. The AI got ahead of me; my order of work is: open questions → Summarize feature → TestForLog / Upscaling / Incidents → harness tests and run cadence → deliverables. Commit as we go, as a timetable. | Reframed harness/README.md; switched CI to manual trigger only; committed. | Order of work set by me. |
 | — | ~09:55–10:05 | _Not AI work:_ call with the recruiter. I reviewed the open questions and wrote assumptions. | — | — |
 | 5 | ~10:10 | Check my open questions pass and its wording; renumber. | Renumbered Q1–Q23, fixed typos and wording, set statuses, flagged Q10 (which language?) and Q15 (memory vs follow-up messages in Incident 3). See [edits.md](edits.md). | _To confirm:_ Q10, Q15. |
+| 6 | ~10:15 | Q10: the language doesn't matter; I just don't want localisation in the test cases. Q15: confirmed. | Updated Q10 and Q15 wording. | Confirmed. |
 
 ## Issues the AI found along the way
 
