@@ -12,7 +12,7 @@ Take-home assessment (Advania, Quality & Engineering Excellence Lead): how to ma
 | [features/](features/) | Assumed definition of new features (Summarize) used to design tests. |
 | [data/](data/) | The two CSV appendices from the brief (policy excerpts, v1 log sample). |
 | [ai-log/](ai-log/) | Audit trail of how AI was used: prompts, what AI produced, and every edit it made to my documents. |
-| [.github/workflows/](.github/workflows/) | CI running the harness on every push. |
+| [.github/workflows/](.github/workflows/) | CI job for the harness (manual trigger for now). |
 
 ## Quick start
 

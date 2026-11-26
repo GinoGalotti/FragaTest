@@ -5,6 +5,7 @@
 | 1 | ~09:00 | Clone the empty repo and get it ready. | Cloned it and confirmed it was empty. | — |
 | 2 | ~09:14 | Push a dummy README. | Committed and pushed a placeholder README to `main`. | — |
 | 3 | ~09:40 | Full brief: see [00-initial-prompt.md](00-initial-prompt.md). Structure the repo, add questions and templates, fix wording with a change log, keep an AI audit trail. | Read the brief PDF and both CSVs. Restructured the repo; git-ignored the PDF. Wrote a brief checklist, templates for the strategy, evaluation sheet, AI usage note and session prep. Rewrote my notes for clarity and added 14 open questions ([edits.md](edits.md)). Added a first-pass verdict on all 20 log lines. Scaffolded the harness (2 example cases plus self-tests) and a CI workflow. | _To review:_ log verdicts in notes/TestForCurrentLog.md · added questions · harness CI decision (see harness/README.md). |
+| 4 | ~09:55 | Clarified: the harness illustrates *how* we would test, not a pass/fail gate. The AI got ahead of me; my order of work is: open questions → Summarize feature → TestForLog / Upscaling / Incidents → harness tests and run cadence → deliverables. Commit as we go, as a timetable. | Reframed harness/README.md; switched CI to manual trigger only; committed. | Order of work set by me. |
 
 ## Issues the AI found along the way
 

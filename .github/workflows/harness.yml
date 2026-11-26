@@ -1,8 +1,8 @@
 name: evaluation-harness
 
+# Manual only for now: the harness illustrates the test structure.
+# Later stages would add: push (quick checks), pull_request (integration), schedule (nightly).
 on:
-  push:
-  pull_request:
   workflow_dispatch:
 
 jobs:

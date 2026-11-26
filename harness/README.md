@@ -22,8 +22,11 @@ python -m venv .venv
 
 Every case is also checked for citing a non-current (repealed) policy.
 
+## Purpose
+
+The harness shows **how** we would structure and run the tests. Whether a recorded answer passes or fails is a finding about v1, not a test outcome to manage. CI runs only when started manually (`workflow_dispatch`).
+
 ## Decisions for you
 
-- [ ] **Known-bad recorded answers in CI:** let them fail (honest red: the harness finds v1 defects), or mark them `xfail` as documented defects so CI stays green and goes red only on change?
-- [ ] Which 5–10 cases to include (G01 and G02 are examples).
+- [ ] Which 5–10 cases to include (G01 and G02 are examples). These come from notes/TestForCurrentLog.md, TestForIncidents.md and TestForUpscaling.md.
 - [ ] Add checks for refusal and personal data (L05, L09, L18)? For example, a regex for case numbers like `2025-0412`.
