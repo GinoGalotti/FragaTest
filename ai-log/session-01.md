@@ -10,7 +10,7 @@
 | 5 | ~10:10 | Check my open questions pass and its wording; renumber. | Renumbered Q1–Q23, fixed typos and wording, set statuses, flagged Q10 (which language?) and Q15 (memory vs follow-up messages in Incident 3). See [edits.md](edits.md). | _To confirm:_ Q10, Q15. |
 | 6 | ~10:15 | Q10: the language doesn't matter; I just don't want localisation in the test cases. Q15: confirmed. | Updated Q10 and Q15 wording. | Confirmed. |
 | — | ~10:16–10:36 | _Not AI work:_ I defined Summarize (features/Summarize.md) and wrote the test table in notes/TestForSummarize.md. | — | — |
-| 7 | ~10:40 | Create synthetic case files as mocked API calls (payload = case file; response = status code, payload, certainty, policies cited, audit location) and mock a test. | Wrote S01–S08 (clear match, repealed trap, unclear boundary, other-case canary, appeal deadline, oversized 413, unauthorised 403, unknown field 400) in notes/TestForSummarize.md. Wrote harness/test_summarize.py, which reads them from the markdown, with 4 self-tests. 12/12 pass. | _To review:_ the assumed API contract and the case contents. |
+| 7 | ~10:40 | Create synthetic case files as mocked API calls (payload = case file; response = status code, payload, certainty, policies cited, audit location) and mock a test. | Wrote S01–S08 in notes/TestForSummarize.md. Wrote harness/test_summarize.py, which reads them from the markdown, with 4 self-tests. 12/12 pass. **Gino: 8 is too many for a 3 h exercise; cut to 2.** Kept the P-107 canary (now S01) and the unclear boundary (now S02); dropped the error-response check. 5/5 pass. | _To review:_ the assumed API contract and the case contents. |
 
 ## Issues the AI found along the way
 

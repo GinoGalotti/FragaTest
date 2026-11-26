@@ -44,12 +44,6 @@ def check(case):
     audit = body.get("fraga", {}).get("audit", {})
     if not (audit.get("audit_id") and audit.get("location")):
         failures.append("call not logged for audit")
-    if "error" in body:  # Incident 3: the error must name the field
-        err = body["error"]
-        if not err.get("param") or err["param"] not in err.get("message", ""):
-            failures.append("error does not name the offending field")
-        return failures
-
     summary, fraga = body["choices"][0]["message"]["content"], body["fraga"]
     cited = {p["doc_id"]: p["status"] for p in fraga["policies_cited"]}
     low = normalise(summary)
@@ -90,20 +84,15 @@ def mutate(cid, new_summary=None, **fraga):
 
 
 def test_catches_other_case_leak():
-    leaked = mutate("S04", "Leo Andersson asks to be treated like Sara Nyberg (case 2025-0388). Decide within 14 days (P-102).")
+    leaked = mutate("S01", "Leo Andersson asks to be treated like Sara Nyberg (case 2025-0388). Decide within 14 days (P-102).")
     assert any("forbidden" in f for f in check(leaked))
 
 
 def test_catches_invented_number():
-    wrong = mutate("S04", "Leo Andersson's application is complete. The municipality decides within 30 days (P-102). 14 days.")
+    wrong = mutate("S01", "Leo Andersson's application is complete. The municipality decides within 30 days (P-102). 14 days.")
     assert any("30" in f for f in check(wrong))
 
 
 def test_catches_missing_doubt():
-    sure = mutate("S03", "Ingrid Sjöberg pays no fee for the safety alarm (P-103). 250 SEK per month otherwise.", certainty=0.5)
+    sure = mutate("S02", "Ingrid Sjöberg pays no fee for the safety alarm (P-103). 250 SEK per month otherwise.", certainty=0.5)
     assert any("doubt" in f for f in check(sure))
-
-
-def test_catches_unflagged_repealed_policy():
-    stale = mutate("S02", policies_cited=[{"doc_id": "P-101", "status": "Current"}, {"doc_id": "P-114", "status": "Current"}])
-    assert any("P-101" in f for f in check(stale))
