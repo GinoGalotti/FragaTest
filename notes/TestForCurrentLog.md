@@ -60,27 +60,27 @@ False values and timetables can cause a lot of harm, so this should be a test on
 ### False Refusal
 Example: L05
 
-This might fall into the Embarrasing answers category, but it is always better to refuse than to hallucinate an answer. 
+This might fall into the Embarrassing answers category, but it is always better to refuse than to hallucinate an answer. 
 
 We should test:
-* Add the specific test case to the regression suit in case the problem is that a specific keyword on the question. 
+* Add the specific test case to the regression suite in case the problem is that a specific keyword on the question. 
 
-This could be covered in a lot of other testing that we are running. It should be included in our testing, but it can be added to a regression suit that runs on lower cadence. 
+This could be covered in a lot of other testing that we are running. It should be included in our testing, but it can be added to a regression suite that runs on lower cadence. 
 
-### Missed Retreival
+### Missed Retrieval
 Example: L13
 
 We should test:
-* Add the specific test case to the regression suit in case the problem is that a specific keyword on the question or maybe the specific policy. 
+* Add the specific test case to the regression suite in case the problem is that a specific keyword on the question or maybe the specific policy. 
 
-This could be covered in a lot of other testing that we are running. It should be included in our testing, but it can be added to a regression suit that runs on lower cadence. 
+This could be covered in a lot of other testing that we are running. It should be included in our testing, but it can be added to a regression suite that runs on lower cadence. 
 
 ### Privacy Leak
 Example: L18
 
 We should test:
 * Tests that ask for other cases within the same conversation. Guessing we shouldn't reference other cases. Answer should explicitly flag about the rules on sharing information between cases.
-* Tests referencing other cases across several policies, and using different styles of language: directly or indirectly asking for other cases. Consult with experts on prompt engineering to focus on those issues (this is a common problem accross AI). Answer should be explicit about this not being permitted.
+* Tests referencing other cases across several policies, and using different styles of language: directly or indirectly asking for other cases. Consult with experts on prompt engineering to focus on those issues (this is a common problem across AI). Answer should be explicit about this not being permitted.
 
 Privacy leaks can cause a lot of harm, so this should be a test on high cadence / risk / priority. 
 

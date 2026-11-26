@@ -29,10 +29,10 @@ Ask yourself:
 ### Tests to regress this
 
 * If possible, use the actual query from the user and ensure that we respond with the correct answer (either that the rule has been repealed, or the new policy)
-* Have tests where there are policies that are repealed and no superseed policy is found. Test we answer in an acceptable manner
-* Have tests with repealed and superseeded policies.
-* If on the data policies should link to "potenatial other policies that are connected", test for that. I am guessing all parking-for-disabled policies should be connected and mention which one is the last standing.
-* Test specifically for time periods when the currently repealed policy was in case (I am assuming we need to apply the policy THEN)
+* Have tests where there are policies that are repealed and no superseding policy is found. Test we answer in an acceptable manner
+* Have tests with repealed and superseded policies.
+* If on the data policies should link to "potential other policies that are connected", test for that. I am guessing all parking-for-disabled policies should be connected and mention which one is the last standing.
+* Test specifically for time periods when the currently repealed policy was in force (I am assuming we need to apply the policy THEN)
 
 ## Incident 2: model upgrade, 3x slower, Swedish compound-word search broken, 2 days to detect
 
@@ -61,7 +61,7 @@ Ask yourself:
 
 ### Tests to regress this
 
-* Add logging and debugging options and monitoring as the definition of done on the different features. If this goes badly, who is on call and how can we investigate it? (we might make the call that loggin makes the API too slow or costly, but it should be a lever we can turn on/off on demand)
+* Add logging and debugging options and monitoring as the definition of done on the different features. If this goes badly, who is on call and how can we investigate it? (we might make the call that logging makes the API too slow or costly, but it should be a lever we can turn on/off on demand)
 * Make sure the system works well with versioning, in case we have to roll back to a previous version. How long do we have to support old API versions?
 * Investigate the issue, it is currently a bit confusing. 
 * Force failures on the tests so we observe that the system fails gracefully and bubble up the error codes to the right places. 

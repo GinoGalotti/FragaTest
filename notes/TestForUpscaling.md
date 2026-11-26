@@ -43,7 +43,7 @@ We will aim to be as data driven as possible, measuring the current metrics and 
 
 For that, we can add some performance tests on code, but also have regular runs of performance tests on "real data" which can quickly inform the team when something is changing. If we can run it often enough, it is easier to triage when a change can cause an impact.
 
-Performance relies on regular testing. This is a non-deterministic application, so we need to gather enough data point to create trends and understand deviation. 
+Performance relies on regular testing. This is a non-deterministic application, so we need to gather enough data points to create trends and understand deviation. 
 
 This is challenged by how much we can spend on testing (and how much of our GPU quota we can access for testing), and that should fluctuate during development. Early on a feature we just want to catch if we are very far off from our targets, while closer to a release we can be more strict with our performance metrics. 
 
@@ -51,8 +51,8 @@ This is challenged by how much we can spend on testing (and how much of our GPU 
 
 We have current usage and load on V1. If we extrapolate the numbers, assume a similar load spread and create likely and worst case scenarios, how do we stand? Test that. 
 
-* Produce "as valid as possible" dummy policies with similar repeal cases and connections to fill an enviroment and measure how it affects our speed. 
-* Measure the delta caused by more repealed and connection between policies. Having 30k policies, how long does it take to consult something that clearly touches and area with 1 policy, 10 repealed and 1 current policy, or 20 connected ones. Produce data to calculate projections.
+* Produce "as valid as possible" dummy policies with similar repeal cases and connections to fill an environment and measure how it affects our speed. 
+* Measure the delta caused by more repealed and connection between policies. Having 30k policies, how long does it take to consult something that clearly touches an area with 1 policy, 10 repealed and 1 current policy, or 20 connected ones. Produce data to calculate projections.
 * Measure the impact on improving the platforms and hardware. If we double the GPU, do we have the same speed with double the load? Do we have more speed on same load? 
 * Test the load balancer and the rules on high load. Do we stagger the queries, limit the effort to offer faster answers (have stricter rules for more costly models)? 
 
@@ -69,7 +69,7 @@ Understand the new users and policies that will be added. Do we have new cases? 
 
 Higher usage means it is more relevant to focus on ways to optimize the application. 
 * Cached answers: especially if we see most new users ask the same queries
-* Hierarchy of policy retreival: maybe some policies are asked more often so we should have a faster access to them
+* Hierarchy of policy retrieval: maybe some policies are asked more often so we should have a faster access to them
 * Better model balancing: specific groups might often ask simple questions and could be defaulted to simpler models
 
 I am NOT an optimization engineer, but if we are going to invest on any of those solutions we should test that they work and ideally measure the impact. That way we can use the data to inform where can we get a bigger return. 
