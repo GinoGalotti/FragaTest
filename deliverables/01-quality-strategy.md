@@ -34,17 +34,17 @@ Likelihood (L) and impact (I) on a 1–5 scale; impact 5 is reserved for breakin
 
 | ID | Risk | L | I | Score | Evidence | Main mitigation |
 |---|---|---|---|---|---|---|
-| R2 | Repealed rule presented as current, worse with 13x the documents | 5 | 4 | **20** | Incident 1, L03 | C2 status check; ingestion test (repeal reaches the index); prod monitor |
-| R3 | Wrong value or rule branch | 4 | 4 | **16** | L07, L11, L16 | C3 + C4; boundary cases |
-| R4 | Peak load misses p95 8 s (8x users, 13x docs, shared GPUs, untested) | 4 | 4 | **16** | No load test since v1 | Load and stress tests, §5 |
-| R1 | Personal data from another case in an answer or summary | 3 | 5 | **15** | L18 (rated up) | C1 code check + seeded canaries in every tier; output guardrail; Summarize scoped per case |
-| R11 | Logging and audit evidence incomplete or untraceable | 3 | 5 | **15** | Brief: every release needs evidence an auditor can trace | Integration test: every call, incl. rejected and during failover, writes an audit record; release blocked if the evidence pack is incomplete |
-| R5 | DC failover fails or exceeds the availability budget | 3 | 4 | 12 | Never tested | Failover test, §5 |
-| R6 | API change breaks tenant apps | 3 | 4 | 12 | Incident 3 | Contract tests with real SDKs; error contract; versioning |
+| R1 | Repealed rule presented as current, worse with 13x the documents | 5 | 4 | **20** | Incident 1, L03 | C2 status check; ingestion test (repeal reaches the index); prod monitor |
+| R2 | Wrong value or rule branch | 4 | 4 | **16** | L07, L11, L16 | C3 + C4; boundary cases |
+| R3 | Peak load misses p95 8 s (8x users, 13x docs, shared GPUs, untested) | 4 | 4 | **16** | No load test since v1 | Load and stress tests, §5 |
+| R4 | Personal data from another case in an answer or summary | 3 | 5 | **15** | L18 (rated up) | C1 code check + seeded canaries in every tier; output guardrail; Summarize scoped per case |
+| R5 | Logging and audit evidence incomplete or untraceable | 3 | 5 | **15** | Brief: every release needs evidence an auditor can trace | Integration test: every call, incl. rejected and during failover, writes an audit record; release blocked if the evidence pack is incomplete |
+| R6 | DC failover fails or exceeds the availability budget | 3 | 4 | 12 | Never tested | Failover test, §5 |
+| R7 | API change breaks tenant apps | 3 | 4 | 12 | Incident 3 | Contract tests with real SDKs; error contract; versioning |
 | R8 | Summarize omits or invents facts | 3 | 4 | 12 | New, untested feature | Faithfulness and omission checks; extra cadence (§4) |
 | R9 | Flaky pipeline means red gets ignored | 4 | 3 | 12 | 12 % flaky, 38 min | §6 |
-| R7 | Model upgrade regresses latency or Swedish retrieval | 3 | 3 | 9 | Incident 2 (2 days to detect) | Upgrade gate, shadow, canary, per-version monitoring |
-| R10 | False refusals erode trust | 3 | 2 | 6 | L05 | C5 threshold |
+| R10 | Model upgrade regresses latency or Swedish retrieval | 3 | 3 | 9 | Incident 2 (2 days to detect) | Upgrade gate, shadow, canary, per-version monitoring |
+| R11 | False refusals erode trust | 3 | 2 | 6 | L05 | C5 threshold |
 
 ## 4. What we test where
 
@@ -87,7 +87,7 @@ From one 38-minute pipeline to four tiers. A test's tier is set by its **risk co
 | Nightly | schedule | ≤ 60 min | full end-to-end suite, live-model evals (5 runs), short load test; results posted to the team channel |
 | On demand | weekly / milestone | — | full load, stress, soak, failover; model-upgrade gate |
 
-**Flaky tests (≈ 26 of 220):** quarantined out of the gating tiers on the first flake. The owner fixes or deletes each within 2 weeks, and the flaky rate is reported weekly (target < 2 %). **Coverage:** don't chase 41 % → X overall; require ≥ 80 % on the code that guards R1–R3 (guardrails, the status filter, API schema). **Ownership:** with no QA, quality is part of the definition of done: tests, logging and a monitor ship with each feature. A rotating release captain runs the gate, and the golden set is shared with the Fråga team (Q22). A named person signs off each release and confirms the audit evidence is complete and traceable.
+**Flaky tests (≈ 26 of 220):** quarantined out of the gating tiers on the first flake. The owner fixes or deletes each within 2 weeks, and the flaky rate is reported weekly (target < 2 %). **Coverage:** don't chase 41 % → X overall; require ≥ 80 % on the code that guards R1, R4 and R7 (the status filter, guardrails, API schema). **Ownership:** with no QA, quality is part of the definition of done: tests, logging and a monitor ship with each feature. A rotating release captain runs the gate, and the golden set is shared with the Fråga team (Q22). A named person signs off each release and confirms the audit evidence is complete and traceable.
 
 ## 7. What we monitor in production
 
@@ -99,7 +99,7 @@ A weekly person audit samples answers **including up-voted ones**, since ratings
 
 ## 8. Release criteria and gates
 
-Here I am making assumptions on possible values, but it highly depends on the momentum, expectations and what is achievable. Data should inform our decisions, but often perfection is the enemy of done. 
+Here I am making assumptions on possible values, but it highly depends on the momentum, expectations and what is achievable. Data should inform our decisions, but we don't want process to hault momemtun. These thresholds are starting values; we tune them with data from the first runs. 
 
 | Gate | Criteria |
 |---|---|

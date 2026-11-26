@@ -19,6 +19,7 @@
 | — | 11:51–12:10 | _Break / not AI work._ | — | — |
 | 11 | ~12:15 | Started my 1 h deliverables block at 12:10. Answered the PLAN questions: decisions approved; Incident 2 latency is caught in a new-model integration test; historical dates → open question, assumed yes; ratings are a user signal, so no tests; L11 and rainy-day (failover, isolation, rollout) tests added to the notes; typos → rely on tools. | Applied to 01 §4 (new-model test bed under integration; effective dates; caches in ingestion propagation). Added Q24. Fixed 3 typos. | Approved defaults D1–D5. |
 | 12 | ~12:36 | Reworked the risk scores in 01 (impact 5 only for breaking the law), added R11 (logging/audit), and edited §5–§9; asked for review while I move to 02. | Fixed R7 arithmetic (3×3 = 9, not 12). Applied the impact-5 rule to R5 (failover: contract, not law → 4). Gave R11 evidence and a testable mitigation. Sorted risks by score and stated the scale rule. Tightened two sentences. Flagged 2 points without changing them. | _To decide:_ the 2 flags. |
+| 13 | ~12:40 | Reworded §8 myself. Renumber the risks so the IDs follow the order, and update references everywhere. | Renumbered R1–R11. The only reference in the deliverables was the coverage sentence in §6, and it was mismatched in the AI's own draft; fixed. 02 has no risk IDs. | — |
 
 ## Issues the AI found along the way
 
