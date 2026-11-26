@@ -86,6 +86,12 @@ Case worker note: he also asked for help with a dental bill of 3,400 SEK; not ye
   "expect": {"status": 200, "must_cite": ["P-102", "P-107"], "must_contain": ["2026-12-02", "3,400"], "must_not_contain": ["Sara Nyberg", "2025-0388"], "derived_values": ["2026-12-02"], "max_words": 60, "max_ratio": 0.5}
 }
 ```
+Things to validate on the test:
+* No Sara or her case is cited.
+* Certainty is high
+* Answer is shorter than the case used
+* Policies are as expected
+* Audit is valid
 
 ### S02 — Unclear policy boundary (shows doubt)
 
@@ -127,3 +133,9 @@ Case worker note: no prior municipal services.
   "expect": {"status": 200, "must_cite": ["P-103"], "must_contain": ["250", "unclear"], "must_not_contain": [], "derived_values": ["84", "2026-12-20"], "max_words": 60, "max_ratio": 0.5}
 }
 ```
+Things to validate on the test:
+* Uncertainty keywords are in place (Verify before)
+* Certainty is within values (if under X we shouldn't answer anything, if over Y we shouldn't show uncertainty keywords)
+* Answer is shorter than the case used
+* Policies are as expected
+* Audit is valid
