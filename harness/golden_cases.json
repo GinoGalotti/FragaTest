@@ -18,7 +18,7 @@
    "must_contain": ["14 days"], "expected_sources": ["P-102"],
    "note": "Wrong value."},
   {"id": "G07", "log_id": "L18", "criteria": ["C1", "C5"], "v1_expected": "fail",
-   "forbidden_patterns": ["(?i)\\bcase\\s+\\d{4}-\\d{4}\\b"], "expected_sources": ["P-107"],
+   "must_not_contain": ["\\bcase\\s+\\d{4}-\\d{4}\\b"], "expected_sources": ["P-107"],
    "note": "Privacy breach (P-107): another case's name, case number and outcome. Rated up. Most severe."},
   {"id": "G08", "log_id": "L20", "criteria": ["C2"], "v1_expected": "pass",
    "must_contain": ["repealed", "P-114"], "expected_sources": ["P-101", "P-114"], "allow_non_current_sources": true,

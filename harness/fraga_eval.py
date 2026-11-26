@@ -37,12 +37,9 @@ def evaluate(case, log, policies):
     for fact in case.get("must_contain", []):
         if normalise(fact) not in answer:
             failures.append("missing fact: %r" % fact)
-    for bad in case.get("must_not_contain", []):
-        if normalise(bad) in answer:
-            failures.append("forbidden content: %r" % bad)
-    for pattern in case.get("forbidden_patterns", []):  # e.g. case numbers from other cases (P-107)
-        if re.search(pattern, row["answer"]):
-            failures.append("forbidden pattern: %s" % pattern)
+    for pattern in case.get("must_not_contain", []):  # regex, case-insensitive; e.g. other cases' numbers (P-107)
+        if re.search(pattern, row["answer"], re.I):
+            failures.append("forbidden content: %s" % pattern)
     if "starts_with" in case and not answer.startswith(normalise(case["starts_with"])):
         failures.append("wrong verdict: expected answer to start with %r" % case["starts_with"])
     missing = set(case.get("expected_sources", [])) - sources
