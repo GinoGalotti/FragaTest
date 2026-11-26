@@ -6,6 +6,8 @@
 | 2 | ~09:14 | Push a dummy README. | Committed and pushed a placeholder README to `main`. | — |
 | 3 | ~09:40 | Full brief: see [00-initial-prompt.md](00-initial-prompt.md). Structure the repo, add questions and templates, fix wording with a change log, keep an AI audit trail. | Read the brief PDF and both CSVs. Restructured the repo; git-ignored the PDF. Wrote a brief checklist, templates for the strategy, evaluation sheet, AI usage note and session prep. Rewrote my notes for clarity and added 14 open questions ([edits.md](edits.md)). Added a first-pass verdict on all 20 log lines. Scaffolded the harness (2 example cases plus self-tests) and a CI workflow. | _To review:_ log verdicts in notes/TestForCurrentLog.md · added questions · harness CI decision (see harness/README.md). |
 | 4 | ~09:55 | Clarified: the harness illustrates *how* we would test, not a pass/fail gate. The AI got ahead of me; my order of work is: open questions → Summarize feature → TestForLog / Upscaling / Incidents → harness tests and run cadence → deliverables. Commit as we go, as a timetable. | Reframed harness/README.md; switched CI to manual trigger only; committed. | Order of work set by me. |
+| — | ~09:55–10:05 | _Not AI work:_ call with the recruiter. I reviewed the open questions and wrote assumptions. | — | — |
+| 5 | ~10:10 | Check my open questions pass and its wording; renumber. | Renumbered Q1–Q23, fixed typos and wording, set statuses, flagged Q10 (which language?) and Q15 (memory vs follow-up messages in Incident 3). See [edits.md](edits.md). | _To confirm:_ Q10, Q15. |
 
 ## Issues the AI found along the way
 
