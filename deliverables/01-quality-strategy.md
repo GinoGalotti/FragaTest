@@ -115,4 +115,4 @@ Here I am making assumptions on possible values, but it highly depends on the mo
 1. Confirm the open questions that change numbers: Q4/Q8 (workload), Q7 (DC setup), Q16 (repeal metadata), Q18 (API versioning).
 2. Build the live-mode harness, with boundary variants.
 3. Run the first load and failover test at 40k docs. It is the largest unknown, and its fixes take weeks.
-4. Agree the weekly numbers with leadership and the golden-set ownership with the app teams.
+4. Agree the weekly numbers with leadership and the golden-set ownership with the app teams (specified on the session-prep.md)
