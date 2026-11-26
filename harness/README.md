@@ -12,7 +12,7 @@ pip install -r requirements.txt && python -m pytest harness -v   # CI form
 Output, one line per case: verdict, case, log line, criteria (see [02-evaluation-design.md](../deliverables/02-evaluation-design.md)), reasons.
 
 ```
-FAIL G07 (L18) [C1,C5] forbidden content: 'granted'; forbidden pattern: \b\d{4}-\d{4}\b; missing sources: ['P-107']
+FAIL G07 (L18) [C1,C5] forbidden pattern: (?i)\bcase\s+\d{4}-\d{4}\b; missing sources: ['P-107']
 PASS G08 (L20) [C2]
 v1 recorded answers: 2/9 pass. Harness agrees with human labels on 9/9.
 ```
@@ -30,8 +30,9 @@ The 7 failing v1 answers are **findings**, not test failures.
 
 | Field | Check |
 |---|---|
-| `must_contain` / `must_not_contain` | key facts present / wrong facts absent (case-insensitive; `1,688` = `1688`) |
-| `forbidden_patterns` | regex, e.g. other cases' case numbers (P-107) |
+| `must_contain` | key facts present (case-insensitive; `1,688` = `1688`); the wording around them is free |
+| `must_not_contain` | optional; only where a rule forbids content, not to list wrong answers |
+| `forbidden_patterns` | regex, e.g. `(?i)\bcase\s+\d{4}-\d{4}\b`: the word "case" followed by a case number (P-107) |
 | `starts_with` | the yes/no verdict |
 | `expected_sources` | policies that must be cited |
 | always | no non-current policy cited, unless `allow_non_current_sources` (the answer explains the repeal) |

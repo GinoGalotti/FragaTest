@@ -22,6 +22,7 @@
 | 13 | ~12:40 | Reworded §8 myself. Renumber the risks so the IDs follow the order, and update references everywhere. | Renumbered R1–R11. The only reference in the deliverables was the coverage sentence in §6, and it was mismatched in the AI's own draft; fixed. 02 has no risk IDs. | — |
 | 14 | ~12:45 | Working on 02 (added content). Add a 2–3 word label next to each criterion ID in the §3 table. | Labelled C1–C6 in §3. Committed Gino's 02 edits. | — |
 | 15 | ~12:50 | Done with 01/02. I'll check the harness; produce and format the PDF (slides if possible). | Spell-checked the deliverables (codespell) and fixed "costumer" and "hault momemtun" (the second found visually) plus one duplicated phrase in 02. Wrote tools/build_pdf.py (Markdown → HTML → headless Edge PDF; repo links become GitHub links). Output: deliverables/Fraga-v2-Quality-Strategy.pdf, 8 pages; the strategy alone is 4 pages (limit met). Slides not built: optional in the brief and out of time. | — |
+| 16 | ~12:58 | Harness: `must_not_contain` makes no sense for listing wrong answers (G01: showing 1,800 is enough); keep it only where a rule forbids content. Other-case references: "case" + the case-number pattern. | Removed it from G01, G02, G03, G06 and G07. Changed the G07 pattern to `(?i)\bcase\s+\d{4}-\d{4}\b` (in `forbidden_patterns`, since `must_not_contain` is literal text; it does not match dates). Updated 02 and the harness README. 9/9 agreement, 18 tests pass; PDF rebuilt. | Gino's rule. |
 
 ## Issues the AI found along the way
 
