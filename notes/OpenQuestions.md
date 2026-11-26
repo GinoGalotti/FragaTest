@@ -57,9 +57,6 @@ Status: `open` (no assumption yet) · `assumed` (we proceed on the assumption) �
 **Q16. (AI-added) How repeal is recorded.** Is policy status (current/repealed, replaced by) a metadata field that retrieval can filter on? How quickly does a repeal reach the index?
 - Assumption: _TBD_ · Status: open
 
-**Q24. Questions about past dates.** Can a case worker ask about a date before a policy was repealed (e.g. a case from 2023), and should Fråga then apply the policy in force at that time?
-- Assumption: Yes. Fråga answers with the policy in force on that date and says it has since been repealed. · Status: assumed
-
 **Q17. (AI-added) The 40k documents.** What formats and languages? Do several versions of the same policy exist? How often do documents change? How long does a full re-index take?
 - Assumption: _TBD_ · Status: open
 
@@ -82,3 +79,6 @@ Status: `open` (no assumption yet) · `assumed` (we proceed on the assumption) �
 
 **Q23. Access to users and experts.** Do we have access to real users or policy experts? Can they periodically review a sample of logged answers with us (especially for the new Summarize feature)?
 - Assumption: Yes. · Status: assumed
+
+**Q24. Questions about past dates.** Can a case worker ask about a date before a policy was repealed (e.g. a case from 2023), and should Fråga then apply the policy in force at that time?
+- Assumption: Yes. Fråga answers with the policy in force on that date and says it has since been repealed. · Status: assumed
