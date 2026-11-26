@@ -99,7 +99,7 @@ A weekly person audit samples answers **including up-voted ones**, since ratings
 
 ## 8. Release criteria and gates
 
-Here I am making assumptions on possible values, but it highly depends on the momentum, expectations and what is achievable. Data should inform our decisions, but we don't want process to hault momemtun. These thresholds are starting values; we tune them with data from the first runs. 
+Here I am making assumptions on possible values, but it highly depends on the momentum, expectations and what is achievable. Data should inform our decisions, but we don't want process to halt momentum. These thresholds are starting values; we tune them with data from the first runs. 
 
 | Gate | Criteria |
 |---|---|

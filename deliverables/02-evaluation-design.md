@@ -17,7 +17,7 @@ How we judge Fråga's non-deterministic answers: we check **patterns** (facts, v
 
 **Ratings are not ground truth:** 3 harmful answers were rated up (L03, L07, L18) and 2 correct ones rated down (L08, L15). Ratings feed triage, never the pass/fail decision.
 
-**Test on unknown:** Non-deterministic scenarios bring a lot of unknown. We should aim to have tests where we create "randomised" policies, questions and policies and create a criteria where we can flag when something requires human validation. I am unsure about the value of these tests, but we need to cover the risk of unknown scenarios. We should involve the costumer success teams in this "mocked" data. 
+**Test on unknown:** Non-deterministic scenarios bring a lot of unknown. We should aim to have tests where we create "randomised" policies and questions, and criteria that flag when something requires human validation. I am unsure about the value of these tests, but we need to cover the risk of unknown scenarios. We should involve the customer success teams in this "mocked" data. 
 
 ## 2. Golden test cases (from the v1 log)
 

@@ -21,6 +21,7 @@
 | 12 | ~12:36 | Reworked the risk scores in 01 (impact 5 only for breaking the law), added R11 (logging/audit), and edited §5–§9; asked for review while I move to 02. | Fixed R7 arithmetic (3×3 = 9, not 12). Applied the impact-5 rule to R5 (failover: contract, not law → 4). Gave R11 evidence and a testable mitigation. Sorted risks by score and stated the scale rule. Tightened two sentences. Flagged 2 points without changing them. | _To decide:_ the 2 flags. |
 | 13 | ~12:40 | Reworded §8 myself. Renumber the risks so the IDs follow the order, and update references everywhere. | Renumbered R1–R11. The only reference in the deliverables was the coverage sentence in §6, and it was mismatched in the AI's own draft; fixed. 02 has no risk IDs. | — |
 | 14 | ~12:45 | Working on 02 (added content). Add a 2–3 word label next to each criterion ID in the §3 table. | Labelled C1–C6 in §3. Committed Gino's 02 edits. | — |
+| 15 | ~12:50 | Done with 01/02. I'll check the harness; produce and format the PDF (slides if possible). | Spell-checked the deliverables (codespell) and fixed "costumer" and "hault momemtun" (the second found visually) plus one duplicated phrase in 02. Wrote tools/build_pdf.py (Markdown → HTML → headless Edge PDF; repo links become GitHub links). Output: deliverables/Fraga-v2-Quality-Strategy.pdf, 8 pages; the strategy alone is 4 pages (limit met). Slides not built: optional in the brief and out of time. | — |
 
 ## Issues the AI found along the way
 
