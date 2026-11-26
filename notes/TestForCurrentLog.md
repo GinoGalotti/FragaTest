@@ -4,7 +4,7 @@ Tests we could build to cover the thumbs-up/down answers we see in the v1 log.
 
 ## AI first pass — please verify
 
-My (Claude's) reading of each log line against [data/fraga-policy-excerpts.csv](../data/fraga-policy-excerpts.csv). **Not yet reviewed by me (Gino).**
+My (Claude's) reading of each log line against [data/fraga-policy-excerpts.csv](../data/fraga-policy-excerpts.csv).
 
 | Log | Rating | Verdict vs policy | Note |
 |---|---|---|---|
@@ -31,20 +31,56 @@ My (Claude's) reading of each log line against [data/fraga-policy-excerpts.csv](
 
 **Takeaways to consider:**
 - Ratings are not ground truth: 3 harmful answers are rated up (L03, L07, L18), and 2 correct answers are rated down (L08, L15).
+- As rating isn't always truth, we should periodically audit our answers and re-run results to see if we get a similar response. Determinism should be higher on higher certainty/confidence answers. 
 - 5 of 20 are unrated, including a wrong one (L11), so rating coverage is a metric in itself.
 - Tally: 12 correct, 1 partial, 7 wrong (L03, L05, L07, L11, L13, L16, L18).
 - Failure types: repealed source, wrong number, false refusal, missed retrieval, wrong rule branch, privacy leak. Each maps to an evaluation criterion.
 
-## Test ideas per failure type
 
-| Failure type | Log lines | Check (code / model / person) | Layer | Cadence |
-|---|---|---|---|---|
-| Repealed source cited | L03 | | | |
-| Wrong number or duration | L07, L16 | | | |
-| Wrong rule branch (thresholds) | L11 | | | |
-| False refusal | L05 | | | |
-| Missed retrieval | L13 | | | |
-| Privacy leak (P-107) | L18 | | | |
-| Rating disagrees with policy | L03, L07, L08, L15, L18 | | | |
+### Repealed source cited
+Example: L03
 
-Ask yourself: for threshold rules (P-104 school transport, P-114 income limit), which boundary cases do you add? (Exactly 3 km, 22,000 SEK, age 85 vs 86.)
+We should add tests covering (not only on a specific policy, but covering several policies with similar setup)
+* Asking for a policy that has been repealed and have a new one, should answer with the new one (and probably mentioned the repealed). Validate the information (values) show the new one. Certainty should be high.
+* Asking for a policy that has been repealed and specifying a time that was before it was repealed should show the old policy values, and mentioned it has been repealed after XXX date. Certainty should be high.
+* Asking for a policy that has been repealed and specifying a time that was after it was repealed should show the new policy values, and mentioned it has been repealed after XXX date. Certainty should be high.
+
+False positives can cause a lot of harm, so this should be a test on high cadence / risk / priority. 
+
+### Wrong value (number/duration)
+Example: L07, L16
+
+We should have test covering keywords:
+* Asking for policies that cite time units and seeing the result contains it (3 weeks, 10 days, 1 year after moving in). Some keywords are important, not only the number.
+* Test for boundaries. On the age cases, if the policy mentions "over 85", test for the boundaries (exactly 85). If that causes uncertainty, check that the answer express so.
+* Test that we specify the unit: weeks, SEK, age, etc. For clarity, the answer should always contain the unit (and in case of numbers, test for format, like decimals / thousands)
+
+False values and timetables can cause a lot of harm, so this should be a test on high cadence / risk / priority. 
+
+### False Refusal
+Example: L05
+
+This might fall into the Embarrasing answers category, but it is always better to refuse than to hallucinate an answer. 
+
+We should test:
+* Add the specific test case to the regression suit in case the problem is that a specific keyword on the question. 
+
+This could be covered in a lot of other testing that we are running. It should be included in our testing, but it can be added to a regression suit that runs on lower cadence. 
+
+### Missed Retreival
+Example: L13
+
+We should test:
+* Add the specific test case to the regression suit in case the problem is that a specific keyword on the question or maybe the specific policy. 
+
+This could be covered in a lot of other testing that we are running. It should be included in our testing, but it can be added to a regression suit that runs on lower cadence. 
+
+### Privacy Leak
+Example: L18
+
+We should test:
+* Tests that ask for other cases within the same conversation. Guessing we shouldn't reference other cases. Answer should explicitly flag about the rules on sharing information between cases.
+* Tests referencing other cases across several policies, and using different styles of language: directly or indirectly asking for other cases. Consult with experts on prompt engineering to focus on those issues (this is a common problem accross AI). Answer should be explicit about this not being permitted.
+
+Privacy leaks can cause a lot of harm, so this should be a test on high cadence / risk / priority. 
+
