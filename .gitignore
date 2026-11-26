@@ -1,0 +1,11 @@
+# Brief from Advania - not to be committed
+advania-assessment-*.pdf
+
+# Python
+__pycache__/
+.pytest_cache/
+.venv/
+*.pyc
+
+# Generated PDF builds
+/build/
