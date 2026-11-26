@@ -30,19 +30,20 @@ Leadership's goals, made measurable. **"No embarrassing answers"** = zero C1/C2 
 
 ## 3. Risk map
 
-Likelihood (L) and impact (I) on a 1–5 scale; score = L × I. Evidence is from the brief and the log.
+Likelihood (L) and impact (I) on a 1–5 scale; impact 5 is reserved for breaking the law (privacy, audit). Score = L × I, sorted high to low. Evidence is from the brief and the log.
 
 | ID | Risk | L | I | Score | Evidence | Main mitigation |
 |---|---|---|---|---|---|---|
-| R1 | Personal data from another case in an answer or summary | 4 | 5 | **20** | L18 (rated up) | C1 code check + seeded canaries in every tier; output guardrail; Summarize scoped per case |
-| R2 | Repealed rule presented as current, worse with 13x the documents | 4 | 5 | **20** | Incident 1, L03 | C2 status check; ingestion test (repeal reaches the index); prod monitor |
+| R2 | Repealed rule presented as current, worse with 13x the documents | 5 | 4 | **20** | Incident 1, L03 | C2 status check; ingestion test (repeal reaches the index); prod monitor |
 | R3 | Wrong value or rule branch | 4 | 4 | **16** | L07, L11, L16 | C3 + C4; boundary cases |
 | R4 | Peak load misses p95 8 s (8x users, 13x docs, shared GPUs, untested) | 4 | 4 | **16** | No load test since v1 | Load and stress tests, §5 |
-| R5 | DC failover fails or exceeds the availability budget | 3 | 5 | **15** | Never tested | Failover test, §5 |
+| R1 | Personal data from another case in an answer or summary | 3 | 5 | **15** | L18 (rated up) | C1 code check + seeded canaries in every tier; output guardrail; Summarize scoped per case |
+| R11 | Logging and audit evidence incomplete or untraceable | 3 | 5 | **15** | Brief: every release needs evidence an auditor can trace | Integration test: every call, incl. rejected and during failover, writes an audit record; release blocked if the evidence pack is incomplete |
+| R5 | DC failover fails or exceeds the availability budget | 3 | 4 | 12 | Never tested | Failover test, §5 |
 | R6 | API change breaks tenant apps | 3 | 4 | 12 | Incident 3 | Contract tests with real SDKs; error contract; versioning |
-| R7 | Model upgrade regresses latency or Swedish retrieval | 3 | 4 | 12 | Incident 2 (2 days to detect) | Upgrade gate, shadow, canary, per-version monitoring |
 | R8 | Summarize omits or invents facts | 3 | 4 | 12 | New, untested feature | Faithfulness and omission checks; extra cadence (§4) |
 | R9 | Flaky pipeline means red gets ignored | 4 | 3 | 12 | 12 % flaky, 38 min | §6 |
+| R7 | Model upgrade regresses latency or Swedish retrieval | 3 | 3 | 9 | Incident 2 (2 days to detect) | Upgrade gate, shadow, canary, per-version monitoring |
 | R10 | False refusals erode trust | 3 | 2 | 6 | L05 | C5 threshold |
 
 ## 4. What we test where
@@ -62,11 +63,13 @@ Likelihood (L) and impact (I) on a 1–5 scale; score = L × I. Evidence is from
 
 Workload model (assumptions Q4, Q8): **400 Fråga users at the 08:30–09:30 peak, ~5 questions each → ~0.6 req/s on average, 3x bursts → ~2 req/s**, plus the other four tenants' recorded peaks. Data: 40k documents including repeal chains. Mix: 80 % Q&A, 20 % Summarize (assumed). Environment: production-like, with Swedish DCs.
 
+Details: [notes/TestForUpscaling.md](../notes/TestForUpscaling.md).
+
 | Test | Scenario | Pass condition | Cadence |
 |---|---|---|---|
-| **Load** | 2x the projected peak, all 5 tenants, 1 h | p95 ≤ 8 s per tenant; errors < 1 %; GPU < 80 % | nightly (short), weekly (full) |
+| **Load** | 2x the projected peak, all 5 tenants, 1 h | p95 ≤ 8 s per tenant; errors < 1 %; GPU < 80 % | nightly (short), weekly (medium), per-milestone (full) |
 | **Stress** | ramp until it breaks | breaking point ≥ 2x peak; overload returns 429 with retry-after, never 5xx or a silent drop; recovers within 5 min | before milestones |
-| **Soak** | peak load for 4 h | no p95 drift > 10 %; no memory or queue growth | weekly |
+| **Soak** | peak load for 4 h | no p95 drift > 10 %; no memory or queue growth | weekly or per milestone, depending on cost |
 | **Failover** | kill one DC at peak | p95 ≤ 8 s again within 5 min; in-flight requests retried or cleanly failed; **no lost audit records**; failover stays in Sweden | monthly + before launch |
 | **Noisy neighbour** | one tenant at 5x its own peak | other tenants' p95 ≤ 8 s (needs per-tenant quotas, Q8) | before launch |
 | **Model upgrade** | new model vs the current one | p95 ≤ 1.2x the current one; compound-word recall not lower; golden set not lower | each upgrade |
@@ -84,18 +87,24 @@ From one 38-minute pipeline to four tiers. A test's tier is set by its **risk co
 | Nightly | schedule | ≤ 60 min | full end-to-end suite, live-model evals (5 runs), short load test; results posted to the team channel |
 | On demand | weekly / milestone | — | full load, stress, soak, failover; model-upgrade gate |
 
-**Flaky tests (≈ 26 of 220):** quarantined out of the gating tiers on the first flake. The owner fixes or deletes each within 2 weeks, and the flaky rate is reported weekly (target < 2 %). **Coverage:** don't chase 41 % → X overall; require ≥ 80 % on the code that guards R1–R3 (guardrails, the status filter, API schema). **Ownership:** with no QA, quality is part of the definition of done: tests, logging and a monitor ship with each feature. A rotating release captain runs the gate, and the golden set is shared with the Fråga team (Q22).
+**Flaky tests (≈ 26 of 220):** quarantined out of the gating tiers on the first flake. The owner fixes or deletes each within 2 weeks, and the flaky rate is reported weekly (target < 2 %). **Coverage:** don't chase 41 % → X overall; require ≥ 80 % on the code that guards R1–R3 (guardrails, the status filter, API schema). **Ownership:** with no QA, quality is part of the definition of done: tests, logging and a monitor ship with each feature. A rotating release captain runs the gate, and the golden set is shared with the Fråga team (Q22). A named person signs off each release and confirms the audit evidence is complete and traceable.
 
 ## 7. What we monitor in production
 
-Per tenant and per model version: p95 latency, availability, error rate by status code and **client library** (catches Incident 3 in minutes); **retrieval empty-result rate and compound-word query hit rate** (Incident 2); % of answers citing a non-current policy (target 0, Incident 1); guardrail blocks and refusal rate; certainty distribution; thumbs-down rate and **rating coverage**; ingestion lag; audit write failures; cost per answer and per summary. Alerts go to the on-call owner. A weekly person audit samples answers **including up-voted ones**, since ratings proved unreliable (L03, L07, L18 rated up).
+Per tenant and per model version: p95 latency, availability, error rate by status code and **client library** (catches Incident 3 in minutes);  % of answers citing a non-current policy (target 0, Incident 1); guardrail blocks and refusal rate; certainty distribution; thumbs-down rate and **rating coverage**; ingestion lag; audit write failures; cost per answer and per summary. Alerts are visible for the team and also have an owner to respond. 
+
+Extra monitoring to have available (that might lose the focus after we gain confidence): metrics on Summarize; **retrieval empty-result rate and compound-word query hit rate** (Incident 2).
+
+A weekly person audit samples answers **including up-voted ones**, since ratings proved unreliable (L03, L07, L18 rated up).
 
 ## 8. Release criteria and gates
+
+Here I am making assumptions on possible values, but it highly depends on the momentum, expectations and what is achievable. Data should inform our decisions, but often perfection is the enemy of done. 
 
 | Gate | Criteria |
 |---|---|
 | **Every weekly release** | C1 and C2 100 %; golden set ≥ 95 % (C3 100 %); contract tests with real SDKs green; p95 benchmark ≤ 1.2x the previous release; no open incident regression failing; evidence pack produced |
-| **Model upgrade** | the weekly gate, plus the compound-word retrieval set and a shadow run on duplicated production queries, then a canary (5 % of users, 48 h) with rollback per tenant |
+| **Model upgrade** | the weekly gate, plus specific scenarios we know that went wrong (like the compound-word case), then a canary (5 % of users, 48 h) with rollback per tenant |
 | **API change** | a stricter schema is a breaking change: new version, deprecation window, release notes to tenants |
 | **v2 launch** | all of the above, plus load, stress, soak and failover passed at 40k docs; Summarize 100 % on C1, C2 and C6; a person sign-off from the Fråga product owner |
 
@@ -104,6 +113,6 @@ Per tenant and per model version: p95 latency, availability, error rate by statu
 ## 9. What I would do next
 
 1. Confirm the open questions that change numbers: Q4/Q8 (workload), Q7 (DC setup), Q16 (repeal metadata), Q18 (API versioning).
-2. Build the live-mode harness, with the Swedish compound-word and boundary variants.
+2. Build the live-mode harness, with boundary variants.
 3. Run the first load and failover test at 40k docs. It is the largest unknown, and its fixes take weeks.
 4. Agree the weekly numbers with leadership and the golden-set ownership with the app teams.

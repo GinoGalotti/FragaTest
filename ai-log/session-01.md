@@ -18,6 +18,7 @@
 | 10 | ~11:48 | Summarize definition time doesn't count as my work. Cap deliverables at 1 h; lean more on AI, since my notes give it the context. | Drafted with the PLAN.md defaults (D1–D5): 9 golden cases in the harness (7 v1 answers fail, 2 pass; harness verdicts match my labels 9/9; the evaluator is the CI gate in recorded mode); deliverable 02 in full; deliverable 01 as a full draft (~2,050 words, may exceed 4 pages); deliverable 03. | _To review:_ every default in 01/02; length of 01. |
 | — | 11:51–12:10 | _Break / not AI work._ | — | — |
 | 11 | ~12:15 | Started my 1 h deliverables block at 12:10. Answered the PLAN questions: decisions approved; Incident 2 latency is caught in a new-model integration test; historical dates → open question, assumed yes; ratings are a user signal, so no tests; L11 and rainy-day (failover, isolation, rollout) tests added to the notes; typos → rely on tools. | Applied to 01 §4 (new-model test bed under integration; effective dates; caches in ingestion propagation). Added Q24. Fixed 3 typos. | Approved defaults D1–D5. |
+| 12 | ~12:36 | Reworked the risk scores in 01 (impact 5 only for breaking the law), added R11 (logging/audit), and edited §5–§9; asked for review while I move to 02. | Fixed R7 arithmetic (3×3 = 9, not 12). Applied the impact-5 rule to R5 (failover: contract, not law → 4). Gave R11 evidence and a testable mitigation. Sorted risks by score and stated the scale rule. Tightened two sentences. Flagged 2 points without changing them. | _To decide:_ the 2 flags. |
 
 ## Issues the AI found along the way
 
