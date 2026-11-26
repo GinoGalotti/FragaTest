@@ -6,7 +6,7 @@ Take-home assessment (Advania, Quality & Engineering Excellence Lead): how to ma
 
 | Folder | Contents |
 |---|---|
-| [deliverables/](deliverables/) | **[Submission PDF](deliverables/Fraga-v2-Quality-Strategy.pdf)** (built by `tools/build_pdf.py`). What gets handed in: quality strategy (01), evaluation design sheet (02), AI usage note (03). Plus a brief checklist (00) and session prep (04). |
+| [deliverables/](deliverables/) | **[Submission PDFs](deliverables/pdf/)** (strategy, evaluation design, harness, AI use; built by `tools/build_pdf.py`). What gets handed in: quality strategy (01), evaluation design sheet (02), AI usage note (03). Plus a brief checklist (00) and session prep (04). |
 | [harness/](harness/) | Runnable evaluation harness (Python + pytest): golden cases checked against the recorded v1 answers. See [harness/README.md](harness/README.md). |
 | [notes/](notes/) | Working notes: testing ideas, open questions and assumptions, plans for incidents, scale-up and log-derived tests. |
 | [features/](features/) | Assumed definition of new features (Summarize) used to design tests. |
