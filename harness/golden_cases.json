@@ -1,0 +1,20 @@
+[
+  {
+    "id": "G01",
+    "log_id": "L01",
+    "criterion": "Amounts match the current source",
+    "must_contain": ["3%", "1,688 SEK"],
+    "must_not_contain": [],
+    "expected_sources": ["P-106"],
+    "note": "EXAMPLE (AI scaffold). Expected to pass on the recorded answer."
+  },
+  {
+    "id": "G02",
+    "log_id": "L03",
+    "criterion": "Never cite a repealed policy as current (Incident 1)",
+    "must_contain": ["1,800 SEK"],
+    "must_not_contain": ["1,200 SEK"],
+    "expected_sources": ["P-114"],
+    "note": "EXAMPLE (AI scaffold). Expected to FAIL: v1 cited repealed P-101 and the case worker rated it up."
+  }
+]
