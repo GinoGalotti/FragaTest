@@ -1,7 +1,7 @@
-"""Build the submission PDF from the deliverables (Markdown -> HTML -> PDF via headless Edge/Chrome).
+"""Build one PDF per deliverable (Markdown -> HTML -> PDF via headless Edge/Chrome).
 
 Usage: python tools/build_pdf.py [browser.exe]
-Output: deliverables/Fraga-v2-Quality-Strategy.pdf (plus build/*.html)
+Output: deliverables/pdf/*.pdf (plus build/*.html)
 """
 import re
 import subprocess
@@ -12,8 +12,11 @@ import markdown
 
 ROOT = Path(__file__).resolve().parent.parent
 REPO = "https://github.com/GinoGalotti/FragaTest/blob/main/"
-PARTS = ["deliverables/01-quality-strategy.md", "deliverables/02-evaluation-design.md",
-         "harness/README.md", "deliverables/03-ai-usage.md"]
+# (source, output name, headings that start a new page)
+DOCS = [("deliverables/01-quality-strategy.md", "1-Quality-Strategy", ["5. Proving the service levels"]),
+        ("deliverables/02-evaluation-design.md", "2-Evaluation-Design", []),
+        ("harness/README.md", "3-Evaluation-Harness", []),
+        ("deliverables/03-ai-usage.md", "4-How-I-Used-AI", [])]
 BROWSER = sys.argv[1] if len(sys.argv) > 1 else r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
 
 CSS = """
@@ -51,13 +54,15 @@ def absolutise_links(md_text, src):
     return re.sub(r"\[([^\]]+)\]\(([^)]+)\)", fix, md_text)
 
 
-def render(parts):
-    html = []
-    for src in parts:
-        text = absolutise_links((ROOT / src).read_text(encoding="utf-8"), src)
-        html.append('<section class="part">%s</section>' % markdown.markdown(text, extensions=["tables", "fenced_code"]))
-    return ("<!doctype html><html><head><meta charset='utf-8'><title>Fråga v2 Quality Strategy</title>"
-            "<style>%s</style></head><body>%s</body></html>" % (CSS, "\n".join(html)))
+def render(src, page_breaks):
+    text = absolutise_links((ROOT / src).read_text(encoding="utf-8"), src)
+    body = markdown.markdown(text, extensions=["tables", "fenced_code"])
+    for heading in page_breaks:
+        tag = "<h2>%s</h2>" % heading
+        assert tag in body, "page-break heading not found: %s" % heading
+        body = body.replace(tag, '<h2 style="page-break-before: always">%s</h2>' % heading)
+    return ("<!doctype html><html><head><meta charset='utf-8'><title>Fråga v2</title>"
+            "<style>%s</style></head><body>%s</body></html>" % (CSS, body))
 
 
 def to_pdf(html, name):
@@ -73,8 +78,9 @@ def to_pdf(html, name):
 
 
 if __name__ == "__main__":
-    _, strategy_pages = to_pdf(render(PARTS[:1]), "strategy-only")
-    pdf, total = to_pdf(render(PARTS), "Fraga-v2-Quality-Strategy")
-    final = ROOT / "deliverables" / "Fraga-v2-Quality-Strategy.pdf"
-    final.write_bytes(pdf.read_bytes())
-    print("Strategy: %d pages (limit 4). Full PDF: %d pages -> %s" % (strategy_pages, total, final.relative_to(ROOT)))
+    out = ROOT / "deliverables" / "pdf"
+    out.mkdir(exist_ok=True)
+    for src, name, breaks in DOCS:
+        pdf, pages = to_pdf(render(src, breaks), name)
+        (out / (name + ".pdf")).write_bytes(pdf.read_bytes())
+        print("%-22s %d pages%s" % (name, pages, "  (limit 4)" if name.startswith("1-") else ""))

@@ -57,7 +57,7 @@ Likelihood (L) and impact (I) on a 1–5 scale; impact 5 is reserved for breakin
 | **Ingestion** | status and effective-date parsing | document metadata schema | new or repealed policy → index → caches → answer, within the SLA | — | ingestion lag; failed documents |
 | **Audit log** | record format | — | every call logged, including rejections; survives failover | — | write failures (alert on any) |
 
-**Evaluations:** six criteria (C1–C6) and golden cases from the log ([02](02-evaluation-design.md)), run on recorded and mocked answers per commit and against the live model nightly (5 runs per case). **Summarize** gets its own checks ([notes/TestForSummarize.md](../notes/TestForSummarize.md)): faithfulness (every number traces to the case or a policy), no other-case data, policy links with reasons, a length ratio, and doubt on unclear policy. It starts on the highest cadence and steps down after 4 clean weeks with no incident.
+**Evaluations:** six criteria and the golden cases are detailed in the Evaluation Design sheet (separate PDF: [02-evaluation-design.md](02-evaluation-design.md)), including when to run each test. **Summarize** gets its own checks ([notes/TestForSummarize.md](../notes/TestForSummarize.md)): faithfulness (every number traces to the case or a policy), no other-case data, policy links with reasons, a length ratio, and doubt on unclear policy. It starts on the highest cadence and steps down after 4 clean weeks with no incident.
 
 ## 5. Proving the service levels
 
