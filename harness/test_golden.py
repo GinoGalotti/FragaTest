@@ -6,9 +6,13 @@ CASES, LOG, POLICIES = load_all()
 
 
 @pytest.mark.parametrize("case", CASES, ids=[c["id"] + "-" + c["log_id"] for c in CASES])
-def test_golden_case(case):
-    failures = evaluate(case, LOG, POLICIES)
-    assert not failures, "; ".join(failures)
+def test_harness_matches_human_label(case):
+    """Recorded v1 answers: the harness must reach the human-labelled verdict.
+
+    Against a live model (nightly/release), the gate is instead: every case passes.
+    """
+    verdict = "fail" if evaluate(case, LOG, POLICIES) else "pass"
+    assert verdict == case["v1_expected"], evaluate(case, LOG, POLICIES)
 
 
 # Self-tests: the checker must catch what it claims to catch (a harness that only passes proves nothing).

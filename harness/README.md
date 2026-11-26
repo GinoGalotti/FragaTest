@@ -1,32 +1,41 @@
 # Evaluation harness
 
-Runs golden cases ([golden_cases.json](golden_cases.json)) against the answers recorded in [data/fraga-log-sample.csv](../data/fraga-log-sample.csv). No model or API key is needed.
+Runs 9 golden cases ([golden_cases.json](golden_cases.json)) against the answers recorded in [data/fraga-log-sample.csv](../data/fraga-log-sample.csv). No model or API key needed. Python 3.8+, standard library only for the report.
 
 ## Run
 
 ```bash
-python -m venv .venv
-.venv/Scripts/pip install -r requirements.txt     # Windows (on Linux/macOS: .venv/bin/pip)
-.venv/Scripts/python -m pytest harness -v         # CI-style, exit code 1 on failure
-.venv/Scripts/python harness/fraga_eval.py        # plain report, standard library only
+python harness/fraga_eval.py                      # report; standard library only
+pip install -r requirements.txt && python -m pytest harness -v   # CI form
 ```
 
-## Golden case fields
+Output, one line per case: verdict, case, log line, criteria (see [02-evaluation-design.md](../deliverables/02-evaluation-design.md)), reasons.
 
-| Field | Meaning |
+```
+FAIL G07 (L18) [C1,C5] forbidden content: 'granted'; forbidden pattern: \b\d{4}-\d{4}\b; missing sources: ['P-107']
+PASS G08 (L20) [C2]
+v1 recorded answers: 2/9 pass. Harness agrees with human labels on 9/9.
+```
+
+## Two modes
+
+| Mode | Input | CI fails when |
+|---|---|---|
+| **Recorded** (this repo) | v1 answers from the log | the harness disagrees with the human-labelled verdict (`v1_expected`): the evaluator itself is wrong |
+| **Live** (nightly / release) | the same questions sent to the candidate build, N runs each | any C1/C2 case fails, or the pass rate drops below the threshold in 02 |
+
+The 7 failing v1 answers are **findings**, not test failures.
+
+## Checks per golden case
+
+| Field | Check |
 |---|---|
-| `must_contain` | Facts the answer must contain (case-insensitive; `1,688` = `1688`). |
-| `must_not_contain` | Content that must not appear (wrong amounts, personal data). |
-| `expected_sources` | Policy IDs that must be cited. |
-| `allow_non_current_sources` | Set to `true` only when citing a repealed policy is correct (e.g. L20 explains the repeal). |
+| `must_contain` / `must_not_contain` | key facts present / wrong facts absent (case-insensitive; `1,688` = `1688`) |
+| `forbidden_patterns` | regex, e.g. other cases' case numbers (P-107) |
+| `starts_with` | the yes/no verdict |
+| `expected_sources` | policies that must be cited |
+| always | no non-current policy cited, unless `allow_non_current_sources` (the answer explains the repeal) |
 
-Every case is also checked for citing a non-current (repealed) policy.
+The pattern checks are code checks (C1–C3, part of C4). The model-judge and person checks in the sheet (C4–C6) are not in this harness.
 
-## Purpose
-
-The harness shows **how** we would structure and run the tests. Whether a recorded answer passes or fails is a finding about v1, not a test outcome to manage. CI runs only when started manually (`workflow_dispatch`).
-
-## Decisions for you
-
-- [ ] Which 5–10 cases to include (G01 and G02 are examples). These come from notes/TestForCurrentLog.md, TestForIncidents.md and TestForUpscaling.md.
-- [ ] Add checks for refusal and personal data (L05, L09, L18)? For example, a regex for case numbers like `2025-0412`.
+[test_summarize.py](test_summarize.py) shows the same approach for Summarize, with mocked API responses (see [notes/TestForSummarize.md](../notes/TestForSummarize.md)).

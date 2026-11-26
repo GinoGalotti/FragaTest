@@ -40,6 +40,11 @@ def evaluate(case, log, policies):
     for bad in case.get("must_not_contain", []):
         if normalise(bad) in answer:
             failures.append("forbidden content: %r" % bad)
+    for pattern in case.get("forbidden_patterns", []):  # e.g. case numbers from other cases (P-107)
+        if re.search(pattern, row["answer"]):
+            failures.append("forbidden pattern: %s" % pattern)
+    if "starts_with" in case and not answer.startswith(normalise(case["starts_with"])):
+        failures.append("wrong verdict: expected answer to start with %r" % case["starts_with"])
     missing = set(case.get("expected_sources", [])) - sources
     if missing:
         failures.append("missing sources: %s" % sorted(missing))
@@ -54,14 +59,22 @@ def load_all():
 
 
 def main():
+    """Report each recorded v1 answer against its golden case.
+
+    Exit code 1 only if the harness disagrees with the human-labelled verdict
+    (v1_expected), i.e. the evaluator itself is wrong. Failing v1 answers are findings.
+    """
     cases, log, policies = load_all()
-    failed = 0
+    failed = disagree = 0
     for case in cases:
         failures = evaluate(case, log, policies)
-        failed += bool(failures)
-        print("%s %-4s (%s) %s" % ("PASS" if not failures else "FAIL", case["id"], case["log_id"], "; ".join(failures)))
-    print("\n%d/%d golden cases passed" % (len(cases) - failed, len(cases)))
-    return 1 if failed else 0
+        verdict = "fail" if failures else "pass"
+        failed += verdict == "fail"
+        disagree += verdict != case["v1_expected"]
+        print("%s %s (%s) [%s] %s" % (verdict.upper(), case["id"], case["log_id"], ",".join(case["criteria"]), "; ".join(failures)))
+    print("\nv1 recorded answers: %d/%d pass. Harness agrees with human labels on %d/%d."
+          % (len(cases) - failed, len(cases), len(cases) - disagree, len(cases)))
+    return 1 if disagree else 0
 
 
 if __name__ == "__main__":
