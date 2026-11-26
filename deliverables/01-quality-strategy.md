@@ -50,10 +50,10 @@ Likelihood (L) and impact (I) on a 1–5 scale; score = L × I. Evidence is from
 | Service ↓ / Layer → | Unit | Contract | Integration | Evaluations | Production monitoring |
 |---|---|---|---|---|---|
 | **Public API** | schema validation, error builder | **real OpenAI SDKs (Python, JS, .NET), multi-turn, per build**; errors name the field; versioned schema | auth per case (Summarize), rate limits | — | 4xx/5xx by client library and version; p95 per tenant |
-| **Model gateway** | routing rules | model and version pinning per tenant | timeout, retry, fallback model | latency benchmark per model version | p95 and error rate per model version |
-| **Retrieval** | status filter, chunking, Swedish compound splitting | — | index of 40k realistic docs (incl. repeal chains) | recall@k on a labelled set incl. compound words; C2 | empty-result rate; % citing non-current policy |
+| **Model gateway** | routing rules | model and version pinning per tenant | timeout, retry, fallback model; **new-model test bed: latency benchmark + golden set before any canary** | golden set per model version | p95 and error rate per model version |
+| **Retrieval** | status filter, effective dates, chunking, Swedish compound splitting | — | index of 40k realistic docs (incl. repeal chains); questions about past dates get the policy in force then (Q24) | recall@k on a labelled set incl. compound words; C2 | empty-result rate; % citing non-current policy |
 | **Guardrails** | PII and case-number detectors | — | end-to-end block path | C1, C5 on labelled sets | blocks/day; refusal-rate spikes |
-| **Ingestion** | status and effective-date parsing | document metadata schema | repeal → index → answer within the SLA | — | ingestion lag; failed documents |
+| **Ingestion** | status and effective-date parsing | document metadata schema | new or repealed policy → index → caches → answer, within the SLA | — | ingestion lag; failed documents |
 | **Audit log** | record format | — | every call logged, including rejections; survives failover | — | write failures (alert on any) |
 
 **Evaluations:** six criteria (C1–C6) and golden cases from the log ([02](02-evaluation-design.md)), run on recorded and mocked answers per commit and against the live model nightly (5 runs per case). **Summarize** gets its own checks ([notes/TestForSummarize.md](../notes/TestForSummarize.md)): faithfulness (every number traces to the case or a policy), no other-case data, policy links with reasons, a length ratio, and doubt on unclear policy. It starts on the highest cadence and steps down after 4 clean weeks with no incident.

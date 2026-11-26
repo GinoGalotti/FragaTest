@@ -16,6 +16,8 @@
 | 9 | ~11:45 | Review my notes and raise questions; plan the deliverables. I shared a personality-test result (low on Delivery: detail and quality standards; medium on Compliance and goal focus) and asked the AI to hold me accountable for it in the deliverables. | Fixed typos in the three notes ([edits.md](edits.md)). Wrote [deliverables/PLAN.md](../deliverables/PLAN.md): a time check (~40 min left), the order of work, 5 decisions with proposed defaults, 6 questions on my notes, and a quality-bar checklist. Flagged that the notes overran the 11:15 stop by 30 min. | _Pending my approval._ |
 | — | 11:45–12:05 | _Break_ (not counted). | — | — |
 | 10 | ~11:48 | Summarize definition time doesn't count as my work. Cap deliverables at 1 h; lean more on AI, since my notes give it the context. | Drafted with the PLAN.md defaults (D1–D5): 9 golden cases in the harness (7 v1 answers fail, 2 pass; harness verdicts match my labels 9/9; the evaluator is the CI gate in recorded mode); deliverable 02 in full; deliverable 01 as a full draft (~2,050 words, may exceed 4 pages); deliverable 03. | _To review:_ every default in 01/02; length of 01. |
+| — | 11:51–12:10 | _Break / not AI work._ | — | — |
+| 11 | ~12:15 | Started my 1 h deliverables block at 12:10. Answered the PLAN questions: decisions approved; Incident 2 latency is caught in a new-model integration test; historical dates → open question, assumed yes; ratings are a user signal, so no tests; L11 and rainy-day (failover, isolation, rollout) tests added to the notes; typos → rely on tools. | Applied to 01 §4 (new-model test bed under integration; effective dates; caches in ingestion propagation). Added Q24. Fixed 3 typos. | Approved defaults D1–D5. |
 
 ## Issues the AI found along the way
 

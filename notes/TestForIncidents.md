@@ -33,6 +33,8 @@ Ask yourself:
 * Have tests with repealed and superseded policies.
 * If on the data policies should link to "potential other policies that are connected", test for that. I am guessing all parking-for-disabled policies should be connected and mention which one is the last standing.
 * Test specifically for time periods when the currently repealed policy was in force (I am assuming we need to apply the policy THEN)
+* Understand how often we query repealed policies and make sure our testing reflects that (if most questions deal with it, most of our testing should do as well).
+* Test for adding new policies. If a new policy is added, and an old one is repealed; how long can it take for the information to propagate? Do we have caches?
 
 ## Incident 2: model upgrade, 3x slower, Swedish compound-word search broken, 2 days to detect
 

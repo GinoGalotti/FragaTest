@@ -23,7 +23,8 @@ The brief: "Please spend no more than 3 hours" and "If you run out of time, tell
 
 Why the evaluation sheet comes first: its material is ready (verified log table), it is fast, and the strategy refers to its criteria.
 
-## Decisions needed (AI defaults: approve or change)
+## Decisions needed
+ANSWER: DONE. 
 
 **D1. Quality attributes, ranked**
 1. Answer safety: no other-case data (P-107), no repealed rules presented as current. *Harm to citizens; legal.*
@@ -63,10 +64,15 @@ Why the evaluation sheet comes first: its material is ready (verified log table)
 
 1. **Incident 3, "currently a bit confusing":** the likely cause is that client libraries send the previous assistant message back on a follow-up, with fields (e.g. `refusal`, `tool_calls: null`) the stricter schema rejected. The key regression test is missing from the notes: **contract tests that run the real SDKs through multi-turn conversations**, plus "errors name the field". Add it?
 2. **Incident 2:** the notes cover shadow, canary, monitoring and rollback, but not a **pre-release latency benchmark**. A 3x slowdown should never reach a canary. Add it?
-3. **Incident 1, "apply the policy THEN":** does Fråga answer for historical dates? That is a new open question. Also missing: an ingestion test (repeal metadata reaches the index within X hours) and a production monitor (% of answers citing a non-current policy).
+ANSWER: This should be caught on an integration test where we are focusing on a new model.
+3. **Incident 1, "apply the policy THEN":** does Fråga answer for historical dates? That is a new open question. Also missing: an ingestion test (repeal metadata reaches the index within X hours) and a production monitor (% of answers citing a non-current policy). 
+ANSWER: Add it to open questions, but I am assuming case can deal with dates in the past. I added the missing tests
 4. **Log:** L11 (wrong rule branch) has no section; your boundary bullet partly covers it. Ratings that disagree with policy (L08, L15) have no process, e.g. weekly review of down-votes plus a sample of up-votes.
+ANSWER: Rating is a user thing and it's ok if people vote wrong, we would address it differently. We don't need tests for that. I added the L11 example.
 5. **Upscaling:** no failover, no noisy-neighbour test, no numbers or pass conditions. D4 covers this for the deliverable.
+ANSWER: Added a test for rainy scenarios
 6. **TestForCurrentLog** still says "AI first pass — please verify", but you removed the "not reviewed" line. If you've verified it, retitle it "Verified".
+ANSWER: changed
 
 ## Quality bar (from Gino's personality feedback; check before delivering)
 
@@ -74,5 +80,6 @@ Why the evaluation sheet comes first: its material is ready (verified log table)
 - [ ] Compliance is explicit: GDPR and P-107, audit evidence per release, data stays in Sweden, AI use declared, time declared. EU AI Act: AI used by public authorities for access to public benefits may be **high-risk**. Mention it as something to verify.
 - [ ] Numbers are consistent everywhere: 13x documents, 8x users, 400 peak users, 99.5 % ≈ 3.6 h/month.
 - [ ] Proofread: the notes had ~12 typos; the deliverables should have none.
+ANSWER: I am happy to rely on tools for typos. 
 - [ ] A "what I'd do next" section exists.
 - [ ] The last 5 minutes are for review, not content.

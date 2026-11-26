@@ -2,7 +2,7 @@
 
 Tests we could build to cover the thumbs-up/down answers we see in the v1 log.
 
-## AI first pass — please verify
+## Summary
 
 My (Claude's) reading of each log line against [data/fraga-policy-excerpts.csv](../data/fraga-policy-excerpts.csv).
 
@@ -36,7 +36,6 @@ My (Claude's) reading of each log line against [data/fraga-policy-excerpts.csv](
 - Tally: 12 correct, 1 partial, 7 wrong (L03, L05, L07, L11, L13, L16, L18).
 - Failure types: repealed source, wrong number, false refusal, missed retrieval, wrong rule branch, privacy leak. Each maps to an evaluation criterion.
 
-
 ### Repealed source cited
 Example: L03
 
@@ -48,12 +47,13 @@ We should add tests covering (not only on a specific policy, but covering severa
 False positives can cause a lot of harm, so this should be a test on high cadence / risk / priority. 
 
 ### Wrong value (number/duration)
-Example: L07, L16
+Example: L07, L16, L11
 
 We should have test covering keywords:
 * Asking for policies that cite time units and seeing the result contains it (3 weeks, 10 days, 1 year after moving in). Some keywords are important, not only the number.
 * Test for boundaries. On the age cases, if the policy mentions "over 85", test for the boundaries (exactly 85). If that causes uncertainty, check that the answer express so.
 * Test that we specify the unit: weeks, SEK, age, etc. For clarity, the answer should always contain the unit (and in case of numbers, test for format, like decimals / thousands)
+* Test when the answer has groups, that we return the right group. For example, on the P-104 case, test for groups on grade 2, grade 4 and grade 9.
 
 False values and timetables can cause a lot of harm, so this should be a test on high cadence / risk / priority. 
 

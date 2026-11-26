@@ -73,3 +73,10 @@ Higher usage means it is more relevant to focus on ways to optimize the applicat
 * Better model balancing: specific groups might often ask simple questions and could be defaulted to simpler models
 
 I am NOT an optimization engineer, but if we are going to invest on any of those solutions we should test that they work and ideally measure the impact. That way we can use the data to inform where can we get a bigger return. 
+
+### Validate rainy scenarios
+
+On a regular cadence (this is costly in time and effort, so needs to be limited) test for scenarios like:
+
+* How do we handle fail overs. Can we isolate the systems to not propagate issues? On integration we can test for failure: databases going down, no access to the platform, etc. 
+* Test spinning up / down the feature. How do we handle rollouts, maintenance, etc. Have test scenarios where this is covered before it is necessary. 
