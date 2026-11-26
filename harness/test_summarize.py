@@ -64,8 +64,10 @@ def check(case):
         failures.append("numbers not in any source: %s" % sorted(unsupported))
     if fraga["certainty"] < 0.7 and not any(w in low for w in DOUBT):
         failures.append("low certainty (%.2f) but no doubt shown" % fraga["certainty"])
-    if len(summary.split()) > expect.get("max_words", 10 ** 6):
-        failures.append("summary too long")
+    words, case_words = len(summary.split()), len(case["case_file"].split())
+    if words > expect.get("max_words", 10 ** 6) or words > expect.get("max_ratio", 1) * case_words:
+        failures.append("summary too long: %d words for a %d-word case file" % (words, case_words))
+    failures += ["no relevance note for %s" % p["doc_id"] for p in fraga["policies_cited"] if not p.get("relevance")]
     return failures
 
 
@@ -91,6 +93,11 @@ def test_catches_other_case_leak():
 def test_catches_invented_number():
     wrong = mutate("S01", "Leo Andersson's application is complete. The municipality decides within 30 days (P-102). 14 days.")
     assert any("30" in f for f in check(wrong))
+
+
+def test_catches_summary_as_long_as_case():
+    long = mutate("S01", " ".join(next(c for c in CASES if c["id"] == "S01")["case_file"].split()[:70]))
+    assert any("too long" in f for f in check(long))
 
 
 def test_catches_missing_doubt():

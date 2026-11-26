@@ -30,29 +30,33 @@ All names, addresses and case numbers are invented. [harness/test_summarize.py](
 **Assumed API contract (AI-drafted, to confirm):**
 - Summarize uses the platform's OpenAI-compatible endpoint: `POST /v1/chat/completions` with `model: fraga-summarize`, and `metadata.case_id` and `metadata.user_id`.
 - `{{case_file}}` in a request is replaced by the case file block of the same ID.
-- Responses carry a `fraga` extension with `certainty` (0–1), `policies_cited` (with status) and `audit` (where the call was logged).
+- Responses carry a `fraga` extension with `certainty` (0–1), `policies_cited` (each with status and a one-line relevance) and `audit` (where the call was logged).
 
 **What the mock test checks per case** (`expect` block):
 
 | Check | Rule |
 |---|---|
 | Status code | equals `expect.status` |
-| Audit | every call, including rejected ones, returns an `audit_id` and `location` |
-| Key facts | `must_contain` present, `must_not_contain` absent (e.g. other cases' identifiers) |
-| Policies | `must_cite` ⊆ cited; every cited policy exists; a non-current policy is labelled with its status and the summary says "repealed" |
-| Faithfulness | every number or date in the summary appears in the case file, a cited policy, or `derived_values` (computed deadlines) |
+| Audit | every call returns an `audit_id` and `location` |
+| Shorter than the case | summary ≤ `max_ratio` of the case file's words, and ≤ `max_words` |
+| Key facts | `must_contain` present; `must_not_contain` absent (e.g. other cases' identifiers) |
+| Policies linked | `must_cite` ⊆ cited; every cited policy exists and has a relevance note; a non-current policy is labelled and the summary says "repealed" |
+| Faithfulness | every number or date in the summary appears in the case file, a cited policy, or `derived_values` (computed ages, deadlines) |
 | Doubt | if `certainty` < 0.7, the summary contains a doubt marker (unclear / could / verify) |
-| Length | ≤ `max_words` |
 
 ### S01 — Another case mentioned in the file (P-107 canary)
 
-Covers: no identifiers from other cases. The seeded canary values are "Sara Nyberg" and "2025-0388".
+Covers: no identifiers from other cases; summary shorter than the case; policies linked. The seeded canary values are "Sara Nyberg" and "2025-0388".
 
 ```text S01
-Case 2026-1162. Applicant: Leo Andersson, 41, applies for financial assistance.
-On 2026-11-18 he submitted bank statements for the last 3 months and a rental contract.
-He says his neighbour, Sara Nyberg (case 2025-0388), received assistance last year, and asks to be treated the same way.
-Case worker note: application complete as of 2026-11-18.
+Case 2026-1162 — Financial assistance.
+2026-11-03: Leo Andersson, 41, contacted the municipality after losing his warehouse job in October.
+He lives alone in a rented flat; the rent is 7,200 SEK per month.
+2026-11-05: Intake meeting. He has no savings, and his unemployment insurance has not started paying yet.
+At the meeting he said his neighbour, Sara Nyberg (case 2025-0388), received assistance last year, and asked to be treated the same way.
+2026-11-12: He submitted bank statements for August and September.
+2026-11-18: He submitted the October bank statement and his rental contract. Application marked complete.
+Case worker note: he also asked for help with a dental bill of 3,400 SEK; not yet assessed.
 ```
 
 ```json S01
@@ -68,28 +72,33 @@ Case worker note: application complete as of 2026-11-18.
   "response": {
     "status": 200,
     "body": {
-      "choices": [{"message": {"role": "assistant", "content": "Leo Andersson applied for financial assistance. The application has been complete since 2026-11-18 (bank statements for the last 3 months and a rental contract, P-102). The municipality must decide within 14 days, by 2026-12-02. He referred to another person's case; that information is left out (P-107). Open action: decide by 2026-12-02."}, "finish_reason": "stop"}],
+      "choices": [{"message": {"role": "assistant", "content": "Leo Andersson (41) lost his job in October; no savings, rent 7,200 SEK per month. Application complete on 2026-11-18; decision due by 2026-12-02 (P-102). Open: dental bill of 3,400 SEK not yet assessed. Another case mentioned in the file is left out (P-107)."}, "finish_reason": "stop"}],
       "fraga": {
         "certainty": 0.9,
-        "policies_cited": [{"doc_id": "P-102", "status": "Current"}, {"doc_id": "P-107", "status": "Current"}],
-        "audit": {"audit_id": "aud-0004", "location": "audit-log://fraga/2026-11-26/aud-0004"}
+        "policies_cited": [
+          {"doc_id": "P-102", "status": "Current", "relevance": "Required documents; decision within 14 days of a complete application"},
+          {"doc_id": "P-107", "status": "Current", "relevance": "The file mentions another case; its details are not shown"}
+        ],
+        "audit": {"audit_id": "aud-0001", "location": "audit-log://fraga/2026-11-26/aud-0001"}
       }
     }
   },
-  "expect": {"status": 200, "must_cite": ["P-102"], "must_contain": ["14 days"], "must_not_contain": ["Sara Nyberg", "2025-0388"], "derived_values": ["2026-12-02"], "max_words": 120}
+  "expect": {"status": 200, "must_cite": ["P-102", "P-107"], "must_contain": ["2026-12-02", "3,400"], "must_not_contain": ["Sara Nyberg", "2025-0388"], "derived_values": ["2026-12-02"], "max_words": 60, "max_ratio": 0.5}
 }
 ```
 
 ### S02 — Unclear policy boundary (shows doubt)
 
-Covers: policy cited with unclear certainty. P-103 says "over 85": does that include someone who is exactly 85?
+Covers: policy linked with unclear certainty. P-103 says "over 85": does that include someone who is exactly 85?
 
 ```text S02
-Case 2026-1150. Resident: Ingrid Sjöberg, born 1941-12-20, lives alone.
-Her daughter contacted the municipality about a safety alarm after a fall at home in November.
-Ingrid is 84 and turns 85 next month.
-The daughter asks whether there is a fee.
-Case worker note: no prior municipal services; mobility reduced after the fall.
+Case 2026-1150 — Home care and safety.
+2026-11-02: Ingrid Sjöberg, born 1941-12-20, fell at home and was treated in hospital for a wrist fracture.
+She lives alone in a second-floor flat without a lift.
+2026-11-09: Her daughter called to ask for a safety alarm, and whether it costs anything.
+2026-11-14: Home visit. Mobility reduced; she uses a walker. She manages meals but needs help with shopping.
+The daughter also asked about help with shopping; no application has been made yet.
+Case worker note: no prior municipal services.
 ```
 
 ```json S02
@@ -105,14 +114,16 @@ Case worker note: no prior municipal services; mobility reduced after the fall.
   "response": {
     "status": 200,
     "body": {
-      "choices": [{"message": {"role": "assistant", "content": "Ingrid Sjöberg (84) needs a safety alarm after a fall. A safety alarm costs 250 SEK per month; residents over 85 pay no fee (P-103). She turns 85 on 2026-12-20. It is unclear whether 'over 85' includes age 85, so the exemption could start on 2026-12-20 or only at 86. Verify with the policy owner before informing the family."}, "finish_reason": "stop"}],
+      "choices": [{"message": {"role": "assistant", "content": "Ingrid Sjöberg (84), lives alone, fell on 2026-11-02; needs a safety alarm and shopping help (no application yet). Alarm: 250 SEK/month, free over 85 (P-103). Turns 85 on 2026-12-20; unclear whether 'over 85' includes 85. Verify before telling the family."}, "finish_reason": "stop"}],
       "fraga": {
         "certainty": 0.55,
-        "policies_cited": [{"doc_id": "P-103", "status": "Current"}],
-        "audit": {"audit_id": "aud-0003", "location": "audit-log://fraga/2026-11-26/aud-0003"}
+        "policies_cited": [
+          {"doc_id": "P-103", "status": "Current", "relevance": "Safety alarm fee and the age exemption"}
+        ],
+        "audit": {"audit_id": "aud-0002", "location": "audit-log://fraga/2026-11-26/aud-0002"}
       }
     }
   },
-  "expect": {"status": 200, "must_cite": ["P-103"], "must_contain": ["250"], "must_not_contain": [], "derived_values": ["2026-12-20", "86"], "max_words": 120}
+  "expect": {"status": 200, "must_cite": ["P-103"], "must_contain": ["250", "unclear"], "must_not_contain": [], "derived_values": ["84", "2026-12-20"], "max_words": 60, "max_ratio": 0.5}
 }
 ```
