@@ -160,7 +160,19 @@ Talking points per agenda area. Lines marked **(+)** are additions to my own not
 
 ---
 
-## 7. First 90 days (v2 launches around day 56)
+## 7a. First 90 days: short version (v2 launches around day 56)
+
+| Period | Focus |
+|---|---|
+| **Days 0–30** | Listen and set a baseline: run the test cases plus production examples on the new model. (+) First load test at 40k docs (the biggest unknown; its fixes take weeks). Split the pipeline into tiers, quarantine flaky tests, C1/C2 in PR checks. |
+| **Days 31–56** | Expensive tests at each milestone, every two weeks after a certain point: performance, load, production-like setups (municipality split, failover). (+) Go/no-go criteria agreed in writing by about week 6. A dry-run release with the full evidence pack. Rollback plan and staggered rollout ready. |
+| **Days 57–90** | Roll out to specific groups, told in advance, and iterate on the issues. Keep the old system available for a period, ideally with both models available. (+) Onboard the other 4 apps' golden sets; lower test cadence where tests stay green. |
+
+**Must be true before launch:** load and failover results, C1/C2 gating, the evidence pack, rollback. **Can wait:** coverage targets, generated "unknown scenario" tests, cadence tuning.
+
+---
+
+## 7b. First 90 days: detailed version (v2 launches around day 56)
 
 ### Guiding principles (say these first)
 - **Surface the biggest unknowns first.** Load at 40k docs, municipality isolation and Summarize all have fixes that take weeks.
