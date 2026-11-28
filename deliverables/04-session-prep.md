@@ -162,13 +162,58 @@ Talking points per agenda area. Lines marked **(+)** are additions to my own not
 
 ## 7. First 90 days (v2 launches around day 56)
 
-| Period | Focus |
-|---|---|
-| **Days 0–30** | Listen and set a baseline: run the test cases plus production examples on the new model. (+) First load test at 40k docs (the biggest unknown; its fixes take weeks). Split the pipeline into tiers, quarantine flaky tests, C1/C2 in PR checks. |
-| **Days 31–56** | Expensive tests at each milestone, every two weeks after a certain point: performance, load, production-like setups (municipality split, failover). (+) Go/no-go criteria agreed in writing by about week 6. A dry-run release with the full evidence pack. Rollback plan and staggered rollout ready. |
-| **Days 57–90** | Roll out to specific groups, told in advance, and iterate on the issues. Keep the old system available for a period, ideally with both models available. (+) Onboard the other 4 apps' golden sets; lower test cadence where tests stay green. |
+### Guiding principles (say these first)
+- **Surface the biggest unknowns first.** Load at 40k docs, municipality isolation and Summarize all have fixes that take weeks.
+- **Launch is a canary, not a big bang.** Day 56 starts a staggered rollout.
+- **Every production issue becomes a test case.** That is how the golden set grows after launch.
+- **Leave the team owning quality.** Tests, monitors and evidence are part of the definition of done, not QA's job.
 
-**Must be true before launch:** load and failover results, C1/C2 gating, the evidence pack, rollback. **Can wait:** coverage targets, generated "unknown scenario" tests, cadence tuning.
+### Weeks 1–2: Listen and set a baseline
+- **Meet:** PO, platform team, the 4 app teams, compliance / DPO, the auditor contact. Sit with a case worker during the 08:30 peak.
+- **Close the questions that change numbers:** workload (Q4/Q8), data-centre setup (Q7), how repeals are recorded (Q16), municipality isolation, GPU sharing for tests.
+- **Baseline:** run the golden cases plus recent production examples on the v2 model, several runs each. This gives the first real error rate per criterion.
+- **Quick wins:** quarantine flaky tests; put C1/C2 into PR checks.
+- **Exit:** baseline report, updated risk map, weekly numbers agreed with leadership.
+
+### Weeks 3–4: Foundations
+- **Live-mode harness:** N runs per case; results stored with model, index and commit versions.
+- **Golden set grown to ~50–100 cases** with policy experts: per municipality, boundaries, repeal chains.
+- **First load test at 40k docs**, as early as the environment allows.
+- **Isolation tests:** canaries per municipality, and who can see which audit logs.
+- **Tiered pipeline:** PR checks ≤ 12 min; nightly runs against the live model.
+- **Exit:** first weekly report to leadership; load-test findings, each with an owner and a date.
+
+### Weeks 5–6: Harden and agree the gate
+- Failover, noisy neighbour, contract tests from all 5 apps.
+- Summarize evaluations reviewed with experts; judge model calibrated against people.
+- EU AI Act classification answered by legal.
+- **Go/no-go criteria signed in writing by the PO and compliance by the end of week 6. This is the key milestone.**
+- A dry-run release that produces the full evidence pack.
+- **Exit:** signed criteria; a rehearsal release an auditor could trace end to end.
+
+### Weeks 7–8: Launch readiness
+- Full milestone run: load, stress and soak on a production-like setup with the municipality split.
+- **Rollback rehearsed:** actually roll back in staging, and time it.
+- **Canary plan:** one municipality, or a group of case workers told in advance. The old system stays available. Criteria for widening and for rolling back are written down.
+- **Go/no-go meeting around day 52:** I recommend, the PO decides, risks are logged.
+
+### Weeks 9–10: Staggered rollout
+- Widen municipality by municipality while the criteria hold: no C1/C2 issues, expert-audit accuracy on track, p95 within target at the real peak.
+- Daily triage for the first 2 weeks; each issue becomes a golden case within a few days.
+- Summarize stays behind a flag that can be switched off per municipality.
+
+### Weeks 11–13: Steady state
+- Retire v1 once its exit criteria are met.
+- Onboard the other 4 apps' golden sets onto the framework.
+- Lower test cadence where tests stay green; Summarize steps down after 4 clean weeks.
+- Retrospective; next-quarter plan (dynamic sets from production, generated edge cases).
+
+### If they push back
+- **"What do you cut if load testing finds a capacity problem?"** Cut scope, not safety: fewer municipalities in the canary, Summarize behind its flag, a slower rollout. Never cut C1/C2 gating, rollback or the evidence pack.
+- **"How do we know it worked at day 90?"** v2 live in all municipalities with no C1/C2 incidents; expert agreement ≥ 90 %; PR pipeline ≤ 12 min with flaky tests < 2 %; an evidence pack for every release; app teams adding golden cases without me.
+- **Biggest risk to the plan:** access to experts. Without them the golden set doesn't grow, so ask for it in week 1.
+
+**Must be true before launch:** load and failover results, C1/C2 gating, the evidence pack, a rehearsed rollback. **Can wait:** coverage targets, generated "unknown scenario" tests, cadence tuning.
 
 ---
 
